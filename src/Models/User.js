@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      minlength: 6,
+      minlength: 8,
       select: false, // login ke alawa password response mein mat bhejo
     },
     profileImage: {
@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema(
     // Forgot password OTP — sirf reset ke time use
     resetOtp: {
       type: String,
+      default: null,
+    },
+
+
+    otpSentAt: {
+      type: Date,
       default: null,
     },
     resetOtpExpiry: {

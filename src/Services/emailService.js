@@ -29,13 +29,19 @@ const sendOtpEmail = async (toEmail, otp) => {
     return;
   }
 
-  await transporter.sendMail({
-    from: `"Node Practice" <${process.env.SMTP_USER}>`,
-    to: toEmail,
-    subject: "Password reset OTP",
-    text: `Your OTP is ${otp}. It expires in 10 minutes.`,
-    html: `<p>Your password reset OTP is: <b>${otp}</b></p><p>Valid for 10 minutes.</p>`,
-  });
+  try {
+    await transporter.sendMail({
+      from: `"Node Practice" <${process.env.SMTP_USER}>`,
+      to: toEmail,
+      subject: "Password reset OTP",
+      text: `Your OTP is ${otp}. It expires in 10 minutes.`,
+      html: `<p>Your password reset OTP is: <b>${otp}</b></p><p>Valid for 10 minutes.</p>`,
+    });
+    console.log(`OTP email sent to ${toEmail}`);
+  } catch (error) {
+    console.error("SMTP email failed:", error.message);
+    console.log(`Fallback OTP for ${toEmail}: ${otp}`);
+  }
 };
 
 module.exports = { sendOtpEmail };

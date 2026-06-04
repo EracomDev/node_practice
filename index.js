@@ -37,6 +37,13 @@ app.use("/api/auth", authRoutes);
 
 // Multer / other errors
 app.use((err, req, res, next) => {
+  if (err.code === "LIMIT_UNEXPECTED_FILE") {
+    return res.status(400).json({
+      success: false,
+      message:
+        'Send exactly ONE file. Field name must be "image" (type: File). Do not pick 2 files in Postman.',
+    });
+  }
   res.status(400).json({ success: false, message: err.message });
 });
 
