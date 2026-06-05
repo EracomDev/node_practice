@@ -208,7 +208,7 @@ const forgotPassword = async (req, res) => {
 // POST /api/auth/reset-password — OTP + naya password
 const resetPassword = async (req, res) => {
   try {
-    const { email, otp, newPassword } = req.body;
+    let { email, otp, newPassword } = req.body;
 
     if (!email || !otp || !newPassword) {
       return res.status(400).json({
@@ -217,10 +217,12 @@ const resetPassword = async (req, res) => {
       });
     }
 
-    if (newPassword.length < 6) {
+    email = email.trim().toLowerCase();
+
+    if (newPassword.length < 8) {
       return res.status(400).json({
         success: false,
-        message: "Password must be at least 6 characters.",
+        message: "Password must be at least 8 characters.",
       });
     }
 
@@ -243,6 +245,7 @@ const resetPassword = async (req, res) => {
     user.password = newPassword;
     user.resetOtp = null;
     user.resetOtpExpiry = null;
+    user.otpSentAt = null;
     await user.save();
 
     sendToken(user, 200, res, "Password reset successful");
@@ -269,7 +272,16 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const { name } = req.body;
-    if (name) req.user.name = name;
+    if (name) {
+      const trimmed = name.trim();
+      if (trimmed.length < 2) {
+        return res.status(400).json({
+          success: false,
+          message: "Name must be at least 2 characters.",
+        });
+      }
+      req.user.name = trimmed;
+    }
     await req.user.save();
 
     res.json({

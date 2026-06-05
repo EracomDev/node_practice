@@ -40,7 +40,7 @@ const sendOtpEmail = async (toEmail, otp) => {
     console.log(`OTP email sent to ${toEmail}`);
   } catch (error) {
     console.error("SMTP email failed:", error.message);
-    console.log(`Fallback OTP for ${toEmail}: ${otp}`);
+    throw error; // controller rollback + error response ke liye
   }
 };
 
