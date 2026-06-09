@@ -6,6 +6,9 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./src/config/db");
 const authRoutes = require("./src/Routes/authRoutes");
+const productRoutes = require("./src/Routes/productRoutes");
+const categoryRoutes = require("./src/Routes/categoryRoutes");
+const cartRoutes = require("./src/Routes/cartRoutes");
 
 const app = express();
 
@@ -20,7 +23,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => {
   res.json({
-    message: "Node Practice API — Auth is ready",
+    message: "Node Practice API — Auth, Products, Categories & Cart ready",
     routes: {
       signup: "POST /api/auth/signup",
       login: "POST /api/auth/login",
@@ -29,11 +32,29 @@ app.get("/", (req, res) => {
       profile: "GET /api/auth/profile (Bearer token)",
       updateProfile: "PUT /api/auth/profile (Bearer token)",
       uploadAvatar: "PUT /api/auth/profile/avatar (Bearer token, form-data image)",
+      getProducts: "GET /api/products",
+      getProduct: "GET /api/products/:id",
+      createProduct: "POST /api/products (Bearer token)",
+      updateProduct: "PUT /api/products/:id (Bearer token)",
+      deleteProduct: "DELETE /api/products/:id (Bearer token)",
+      getCategories: "GET /api/categories",
+      getCategory: "GET /api/categories/:id",
+      createCategory: "POST /api/categories (Bearer token)",
+      updateCategory: "PUT /api/categories/:id (Bearer token)",
+      deleteCategory: "DELETE /api/categories/:id (Bearer token)",
+      getCart: "GET /api/cart (Bearer token)",
+      addToCart: "POST /api/cart (Bearer token)",
+      updateCartItem: "PUT /api/cart/:productId (Bearer token)",
+      removeFromCart: "DELETE /api/cart/:productId (Bearer token)",
+      clearCart: "DELETE /api/cart (Bearer token)",
     },
   });
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
+app.use("/api/cart", cartRoutes);
 
 // Multer / other errors
 app.use((err, req, res, next) => {
