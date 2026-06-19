@@ -9,6 +9,7 @@ const authRoutes = require("./src/Routes/authRoutes");
 const productRoutes = require("./src/Routes/productRoutes");
 const categoryRoutes = require("./src/Routes/categoryRoutes");
 const cartRoutes = require("./src/Routes/cartRoutes");
+const orderRoutes = require("./src/Routes/orderRoutes");
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res) => {
   res.json({
-    message: "Node Practice API — Auth, Products, Categories & Cart ready",
+    message: "Node Practice API — Auth, Products, Categories, Cart & Orders ready",
     routes: {
       signup: "POST /api/auth/signup",
       login: "POST /api/auth/login",
@@ -47,6 +48,10 @@ app.get("/", (req, res) => {
       updateCartItem: "PUT /api/cart/:productId (Bearer token)",
       removeFromCart: "DELETE /api/cart/:productId (Bearer token)",
       clearCart: "DELETE /api/cart (Bearer token)",
+      placeOrder: "POST /api/orders (Bearer token)",
+      getMyOrders: "GET /api/orders (Bearer token)",
+      getOrder: "GET /api/orders/:id (Bearer token)",
+      cancelOrder: "PUT /api/orders/:id/cancel (Bearer token)",
     },
   });
 });
@@ -55,6 +60,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Multer / other errors
 app.use((err, req, res, next) => {
